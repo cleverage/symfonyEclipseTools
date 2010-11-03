@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="naholyr.eclipse.sf.tploverride.TemplateOverrideDecorator"
+            id="naholyr.eclipse.sf.decorator"
+            label="Surcharge template"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="true">
+         <enablement>
+            <or>
+               <objectClass
+                     name="org.eclipse.core.resources.IResource">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.core.resources.IFile">
+               </objectClass>
+            </or>
+         </enablement>
+      </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="naholyr.eclipse.sf.contribution.templates"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="symfony"
+               path="additions"
+               id="naholyr.eclipse.sf.menu">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="naholyr.eclipse.sf.tploverride.OpenTemplatesPopupAction"
+               enablesFor="1"
+               icon="icons/tpl_override.gif"
+               id="naholyr.eclipse.sf.openTemplates"
+               label="Ouvrir surcharges template"
+               menubarPath="naholyr.eclipse.sf.menu/group1"
+               tooltip="Ouvre le fichier et tous les fichiers surchargés par lui ou le surchargeant dans le même projet Eclipse">
+            <enablement>
+               <objectState
+                     name="extension"
+                     value="php">
+               </objectState>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
