@@ -23,7 +23,7 @@ public class SymfonyTools {
 		if (hasSymfonyScript(path)) {
 			return path;
 		}
-		if (path.isEmpty()) {
+		if (path.isEmpty() || path.isRoot()) {
 			return null;
 		}
 		return getProjectPath(path.removeLastSegments(1));

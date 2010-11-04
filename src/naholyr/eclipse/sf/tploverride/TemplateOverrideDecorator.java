@@ -34,7 +34,7 @@ public class TemplateOverrideDecorator implements ILightweightLabelDecorator {
 	@Override
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof IFile && shouldDecorate((IFile) element)) {
-			decoration.addOverlay(ICON);
+			decoration.addOverlay(ICON, IDecoration.TOP_LEFT);
 		}
 	}
 
