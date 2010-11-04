@@ -20,13 +20,16 @@ public class SymfonyTools {
 	}
 
 	public static IPath getProjectPath(IPath path) {
-		if (hasSymfonyScript(path)) {
-			return path;
+		while (true) {
+			if (hasSymfonyScript(path)) {
+				return path;
+			}
+			if (path.isEmpty() || path.isRoot()) {
+				break;
+			}
+			path = path.removeLastSegments(1);
 		}
-		if (path.isEmpty() || path.isRoot()) {
-			return null;
-		}
-		return getProjectPath(path.removeLastSegments(1));
+		return null;
 	}
 
 	public static boolean isInProject(IResource resource) {
