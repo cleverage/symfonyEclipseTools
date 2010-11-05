@@ -51,6 +51,22 @@ public class SymfonyTools {
 		return path.removeLastSegments(1).lastSegment().equals("templates"); //$NON-NLS-1$
 	}
 
+	public static String getModuleName(IPath path) {
+		while (path != null && !path.isRoot() && !path.isEmpty()) {
+			// upper path == modules
+			IPath parent = path.removeLastSegments(1);
+			if (parent == null || parent.isRoot() || parent.isEmpty()) {
+				break;
+			}
+			if (parent.lastSegment().equals("modules")) {
+				// moduleName = path
+				return path.lastSegment();
+			}
+			path = parent;
+		}
+		return null;
+	}
+
 	public static boolean isTemplateOverride(IResource resource) {
 		return isTemplateOverride(resource.getLocation());
 	}
@@ -69,16 +85,27 @@ public class SymfonyTools {
 			return null;
 		}
 		String fileName = path.lastSegment();
+		String moduleName = getModuleName(path);
+		System.out.println("template's module name : " + path + " → " + moduleName);
 		IPath projectPath = getProjectPath(path);
 		IPath[] templatesFolders = getAllTemplatesFolders(projectPath);
 		ArrayList<IPath> result = new ArrayList<IPath>();
 		for (IPath templatesFolder : templatesFolders) {
-			IPath templatePath = templatesFolder.append(fileName);
-			if (!templatePath.equals(path)) {
-				File templateFile = templatePath.toFile();
-				if (templateFile.exists() && templateFile.isFile()) {
-					result.add(templatePath);
+			String templatesModuleName = getModuleName(templatesFolder);
+			System.out.println("other folder's module name : " + templatesFolder + " → " + templatesModuleName);
+			if ((moduleName == null && templatesModuleName == null)
+					|| (moduleName != null && moduleName
+							.equals(templatesModuleName))) {
+				System.out.println("ok");
+				IPath templatePath = templatesFolder.append(fileName);
+				if (!templatePath.equals(path)) {
+					File templateFile = templatePath.toFile();
+					if (templateFile.exists() && templateFile.isFile()) {
+						result.add(templatePath);
+					}
 				}
+			} else {
+				System.out.println("nok");
 			}
 		}
 		return result.toArray(new IPath[0]);
